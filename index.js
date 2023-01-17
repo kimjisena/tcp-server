@@ -1,9 +1,10 @@
 import net from "net";
-import { int2bytes, copy_buffer, bytes2int } from "./utils.js";
+import { int2bytes, copy_buffer, bytes2int, send_to_http_server } from "./utils.js";
 import { parse_imei, parse_header, parse_body } from "./parser.js";
 
 const HOST = '127.0.0.1';
-const PORT = 1861;
+const PORT = 8499;
+const DestinationURL = 'http://localhost:3000/gps-data';
 
 net.createServer(sock => {
     console.log(`[${new Date().toLocaleString()}] Connected to ${sock.remoteAddress}:${sock.remotePort}`);
@@ -22,13 +23,20 @@ net.createServer(sock => {
             payload.push(parsedData);
 
             console.log(`[${new Date().toLocaleString()}] Payload: %o`, payload);
-            payload = [payload[0]];
+            let response = send_to_http_server(parsedData, DestinationURL);
 
-            // send the 10th byte back (number_of_data1) as acknowledgement
-            let ack = new Uint8Array(4);
-            ack.set(new Uint8Array([0, 0, 0]));
-            ack.set(copy_buffer(data, 9, 10), 3);
-            sock.write(ack);
+            if (response.status === 200) {
+                payload = [payload[0]];
+
+                // send the 10th byte back (number_of_data1) as acknowledgement
+                let ack = new Uint8Array(4);
+                ack.set(new Uint8Array([0, 0, 0]));
+                ack.set(copy_buffer(data, 9, 10), 3);
+                sock.write(ack);
+            } else {
+                // we failed to POST that data, please do resend it
+                sock.write(new Uint8Array([0, 0, 0, 0]));
+            }
         }
     });
 
