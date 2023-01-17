@@ -42,7 +42,7 @@ export function bytes2int (bytes) {
 
 /**
  * 
- * @param {{}} data JSON string to be sent to http server
+ * @param {{}} data Data to be sent to http server
  * @param {string} url The api end point
  * @param {string}
  * @returns {{status: number, statusText: string}} The status of the post request
@@ -51,16 +51,15 @@ export async function send_to_http_server (data, url) {
     const opts = {
         method: 'POST',
         headers: {
-            'User-Agent': 'NodeJS/JavaScript',
+            'User-Agent': `NodeJS/${process.version}`,
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'X-API-KEY': '<tracker.dtcl.co.tz auth key>',
         },
         body: JSON.stringify(data),
      };
 
     const response = await fetch(url, opts);
-
-    response.status
 
     return {
         status: response.status,

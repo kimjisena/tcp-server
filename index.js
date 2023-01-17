@@ -4,7 +4,7 @@ import { parse_imei, parse_header, parse_body } from "./parser.js";
 
 const HOST = '127.0.0.1';
 const PORT = 8499;
-const DestinationURL = 'http://localhost:3000/gps-data';
+const URL = 'https://tracker.dtcl.co.tz/api/gps-data';
 
 net.createServer(sock => {
     console.log(`[${new Date().toLocaleString()}] Connected to ${sock.remoteAddress}:${sock.remotePort}`);
@@ -23,7 +23,7 @@ net.createServer(sock => {
             payload.push(parsedData);
 
             console.log(`[${new Date().toLocaleString()}] Payload: %o`, payload);
-            let response = send_to_http_server(parsedData, DestinationURL);
+            let response = send_to_http_server(parsedData, URL);
 
             if (response.status === 200) {
                 payload = [payload[0]];
