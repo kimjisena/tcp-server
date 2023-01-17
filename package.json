@@ -1,0 +1,17 @@
+{
+  "name": "tcp-server",
+  "version": "1.0.0",
+  "description": "TCP Server",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Hello\""
+  },
+  "keywords": [
+    "tcp/ip",
+    "sockets",
+    "networking"
+  ],
+  "author": "Kim Jisena",
+  "license": "MIT"
+}
