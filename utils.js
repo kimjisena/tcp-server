@@ -61,8 +61,5 @@ export async function send_to_http_server (data, url) {
 
     const response = await fetch(url, opts);
 
-    return {
-        status: response.status,
-        statusText: response.statusText,
-    };
+    return response;
 }
