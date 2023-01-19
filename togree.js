@@ -22,6 +22,7 @@ net.createServer(sock => {
             console.log('Ack: %o', Buffer.from(ack));
             sock.write(ack);
         } else {
+            console.log('Not a login protocol');
             console.log('Raw data: %o', data);
             let ack = getACK(data);
             console.log('Ack: %o', Buffer.from(ack));
