@@ -65,6 +65,52 @@ export function merge_bytes (buff1, buff2) {
 
 /**
  * 
+ * @param {Buffer} buffer The received packet
+ * @returns {number} Protocol number
+ */
+export function getProtocol (buffer) {
+    return buffer[3];
+}
+
+export function getACK (buffer) {
+    let startBit = copy_buffer(buffer, 0, 2);
+    let packelLength = new Uint16Array([0X05]);
+    let protocolNo = new Uint8Array([buffer[3]]);
+    let serialNo = new Uint8Array([buffer[buffer.length - 6], buffer[buffer.length - 5]]);
+    let body = merge_bytes(merge_bytes(packelLength, protocolNo), serialNo);
+    let errorCheck = getCRC16(body);
+    let stopBit = new Uint8Array([0X0D, 0X0A]);
+    let ack = merge_bytes(merge_bytes(startBit, body), merge_bytes(errorCheck, stopBit));
+
+    return ack;
+}
+
+/**
+ * 
+ * @param {{}} data Data to be sent to http server
+ * @param {string} url The api end point
+ * @param {string}
+ * @returns {{status: number, statusText: string}} The status of the post request
+ */
+export async function send_to_http_server (data, url) {
+    const opts = {
+        method: 'POST',
+        headers: {
+            'User-Agent': `NodeJS/${process.version}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-API-KEY': '<tracker.dtcl.co.tz auth key>',
+        },
+        body: JSON.stringify(data),
+     };
+
+    const response = await fetch(url, opts);
+
+    return response;
+}
+
+/**
+ * 
  * @param {Uint8Array} buf The bytes 
  * @returns {Uint8Array} The CRC16 (2 bytes)
  * 
@@ -73,7 +119,8 @@ export function merge_bytes (buff1, buff2) {
  * 78780d010358899050176646002ab1950d0a - b195
  * 78780d010358899050176646002ba01c0d0a - a01c
  */
-function getCRC16(buf) {
+
+export function getCRC16(buf) {
 
     let crcX = 0XFFFF;
     let cr1 = 0XFF;
@@ -92,9 +139,15 @@ function getCRC16(buf) {
     return int2bytes(crcX);
 }
 
-let sample_data = Buffer.from([0x78, 0x78, 0x0d, 0x01, 0x03, 0x58, 0x89, 0x90, 0x50, 0x17, 0x66, 0x46, 0x00, 0x26, 0x7b, 0xf9, 0x0d, 0x0a]);
-let start_bit = [0x78, 0x78];
-let error_check = [0x7b, 0xf9];
-let stop_bit = [0x0d, 0x0a];
+// let sample_data = Buffer.from([0x78, 0x78, 0x0d, 0x01, 0x03, 0x58, 0x89, 0x90, 0x50, 0x17, 0x66, 0x46, 0x00, 0x26, 0x7b, 0xf9, 0x0d, 0x0a]);
+// let start_bit = [0x78, 0x78];
+// let error_check = [0x7b, 0xf9];
+// let stop_bit = [0x0d, 0x0a];
 
-let data = Buffer.from([ 0x0d, 0x01, 0x03, 0x58, 0x89, 0x90, 0x50, 0x17, 0x66, 0x46, 0x00, 0x26]);
+// let data = Buffer.from([ 0x0d, 0x01, 0x03, 0x58, 0x89, 0x90, 0x50, 0x17, 0x66, 0x46, 0x00, 0x26]);
+
+// // output: 91d9
+
+// let input = [0x11, 0x01, 0x08, 0x62, 0x29, 0x20, 0x50, 0x75, 0x49, 0x10, 0x70, 0x11, 0x12, 0xc1, 0x00, 0x3a]
+
+// console.log(Buffer.from(getCRC16(new Uint8Array(input))));

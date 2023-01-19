@@ -1,5 +1,6 @@
 import net from "net";
-import { int2bytes } from "./utils.js";
+import { parse_packet } from "./togree_parser.js";
+import { getCRC16, getProtocol, int2bytes, merge_bytes, getACK } from "./lib.js";
 
 
 const HOST = '127.0.0.1';
@@ -11,9 +12,21 @@ net.createServer(sock => {
 
     sock.on("data", (data) => {
         console.log(`[${new Date().toLocaleString()}] Received  data from ${sock.remoteAddress}:${sock.remotePort}`);
-        console.log(`Data length: ${data.length}\n`);
-        console.log(`Data:%o`, data);
-        sock.write(int2bytes(1));
+        let parsedData = parse_packet(data);
+        console.log("Parsed Data: %o", parsedData);
+
+        let protocol = getProtocol(data);
+        console.log('Protocol: ', protocol);
+        if (protocol === 0x01) {
+            let ack = getACK(data);
+            console.log('Ack: %o', Buffer.from(ack));
+            sock.write(ack);
+        } else {
+            console.log('Raw data: %o', data);
+            let ack = getACK(data);
+            console.log('Ack: %o', Buffer.from(ack));
+            sock.write(ack);
+        }
     });
 
     sock.on("close", (data) => {
