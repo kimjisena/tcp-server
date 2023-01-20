@@ -10,7 +10,7 @@ export type ProtocolType = (
     );
 
 const PROTOCOLS: Record<string, ProtocolType> = {
-    '0xo1': 'login',
+    '0x01': 'login',
     '0x10': 'gps',
     '0x11': 'lbs',
     '0x12': 'gps_lbs',
@@ -19,7 +19,7 @@ const PROTOCOLS: Record<string, ProtocolType> = {
     '0x15': 'string',
     '0x96': 'gps_lbs_status',
     '0x97': 'lbs_via_phone',
-    'ox98': 'lbs_ext', // or 0x18
+    '0x98': 'lbs_ext', // or 0x18
     '0x99': 'lbs_status',
     '0x9a': 'gps_via_phone',
     '0x9b': 'geofence_alarm',

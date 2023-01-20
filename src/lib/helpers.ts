@@ -1,4 +1,4 @@
-import { type PacketData } from "../index.js";
+import { ParserReturnType } from "./parse.js";
 
 export default function getView (buffer: Buffer): Uint8Array {
     return Uint8Array.prototype.slice.call(buffer, 0);
@@ -42,7 +42,7 @@ export function mergeBytes (view1: Uint8Array, view2: Uint8Array): Uint8Array {
     return merged;
 }
 
-export async function sendToHTTPServer (data: PacketData, url: string): Promise<Response> {
+export async function sendToHTTPServer (data: ParserReturnType, url: string): Promise<Response> {
     const options: RequestInit = {
         method: 'POST',
         headers: {

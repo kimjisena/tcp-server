@@ -8,11 +8,6 @@ import { ParserReturnType } from './lib/parse.js';
 // inject environment variables into process.env
 dotenv.config();
 
-export type PacketData = null | {
-    imei: string,
-    info: Record<string, string | number>,
-};
-
 const server = net.createServer(sock => {
 
     console.log(`[${new Date().toLocaleString()}] Connected to ${sock.remoteAddress}:${sock.remotePort}`);
