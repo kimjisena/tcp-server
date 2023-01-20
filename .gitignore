@@ -1,1 +1,10 @@
+# packages
+/node_modules
+
+# build files
+/dist
+/js
 test.js
+logs.txt
+# environment variables
+.env

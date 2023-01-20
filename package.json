@@ -2,8 +2,12 @@
   "name": "tcp-server",
   "version": "1.0.0",
   "description": "TCP Server",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "test": "echo \"Hello\""
   },
@@ -13,5 +17,11 @@
     "networking"
   ],
   "author": "Kim Jisena",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
+  }
 }
