@@ -265,6 +265,8 @@ export default function parse (buffer: Buffer): ParserReturnType {
     let parser = new Parser(sliceBuffer(buffer));
     let protocol = PROTOCOLS[getProtocol(buffer)];
 
+    // a placeholder switch statement (we don't really need it)
+    // implementation will be `return parser[protocol]();
     switch(protocol) {
         case 'login':
             return parser[protocol]();
